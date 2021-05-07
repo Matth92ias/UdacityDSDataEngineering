@@ -1,8 +1,9 @@
 import sys
-
+import pandas as pd
+from sqlalchemy import create_engine
+import pickle
 
 def load_data(messages_filepath, categories_filepath):
-    def load_data(messages_filepath, categories_filepath):
     '''
     Import and merge csv files
 
@@ -17,7 +18,6 @@ def load_data(messages_filepath, categories_filepath):
     df = messages.merge(categories,on="id")
 
     return df
-
 
 def clean_data(df):
     '''
@@ -54,7 +54,15 @@ def clean_data(df):
 
 
 def save_data(df, database_filename):
-    pass
+    '''
+    save cleaned dataframe to sql database
+
+    df: dataframe to save
+    database_filename: filename of the database to be saved to
+    '''
+    database_name = 'sqlite:///' + database_filename
+    engine = create_engine(database_name)
+    df.to_sql('disaster_clean', engine, index=False)
 
 
 def main():
