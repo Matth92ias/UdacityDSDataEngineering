@@ -2,15 +2,59 @@ import sys
 
 
 def load_data(messages_filepath, categories_filepath):
-    pass
+    def load_data(messages_filepath, categories_filepath):
+    '''
+    Import and merge csv files
+
+    messages_filepath: path to messages file
+    categories_filepath: path to categories file
+
+    returns merged file
+    '''
+    # load messages dataset
+    messages = pd.read_csv(messages_filepath)
+    categories = pd.read_csv(categories_filepath)
+    df = messages.merge(categories,on="id")
+
+    return df
 
 
 def clean_data(df):
-    pass
+    '''
+    clean dataframe
+
+    df: merged dataframe containing messages and categories
+
+    returns cleaned dataframe
+    '''
+    categories = df.categories.str.split(";",expand=True)
+
+    # extract column names out of values
+    row = categories.loc[0,:]
+    category_colnames = row.map(lambda x: str(x)[:-2])
+
+    # rename the columns of `categories`
+    categories.columns = category_colnames
+
+    # remove column name from value and change to numeric
+    for column in categories:
+       # set each value to be the last character of the string
+       categories[column] = categories[column].map(lambda x: str(x)[-1])
+
+       # convert column from string to numeric
+       categories[column] = pd.to_numeric(categories[column])
+
+    # drop original categories column
+    df = df.drop(['categories'],axis=1)
+
+    # concate new categories to dataframe
+    df = pd.concat([df,categories],axis=1)
+
+    return df 
 
 
 def save_data(df, database_filename):
-    pass  
+    pass
 
 
 def main():
@@ -24,12 +68,12 @@ def main():
 
         print('Cleaning data...')
         df = clean_data(df)
-        
+
         print('Saving data...\n    DATABASE: {}'.format(database_filepath))
         save_data(df, database_filepath)
-        
+
         print('Cleaned data saved to database!')
-    
+
     else:
         print('Please provide the filepaths of the messages and categories '\
               'datasets as the first and second argument respectively, as '\
