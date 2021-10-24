@@ -1,4 +1,3 @@
-import pandas as pd
 import importlib
 import sys
 
@@ -11,3 +10,7 @@ df = load_data('data/disaster_messages.csv','data/disaster_categories.csv')
 df = clean_data(df)
 save_data(df,'data/DisasterResponse.db')
 df.head()
+
+from models.train_classifier import load_data
+database_filepath  ='data/DisasterResponse.db'
+X, Y, category_names = load_data(database_filepath)
