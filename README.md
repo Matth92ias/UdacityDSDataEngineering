@@ -1,5 +1,11 @@
 # Disaster Response Pipeline Project
 
+This project contains the Code to complete the Disaster Pipeline Data Engineering Project of the Udacity Nanodegree Data Scientist. The goal is to cluster messages into different categories. 
+
+All required packages are listed in the requirements file. First move to the project as a root directory and then call the following commands.
+
+The first two steps are to clean the data and fit a model on the cleaned dataset. For this purpose a XGBoost model is used with a RandomizedSearchCV grid to optimize hyperparameters.
+
 ### Instructions:
 1. Run the following commands in the project's root directory to set up your database and model.
 
@@ -9,6 +15,7 @@
         `python models/train_classifier.py data/DisasterResponse.db models/classifier.pkl`
 
 2. Run the following command in the app's directory to run your web app.
-    `python run.py`
+    `python app/run.py`
 
 3. Go to http://0.0.0.0:3001/
+

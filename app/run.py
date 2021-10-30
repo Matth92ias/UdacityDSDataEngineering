@@ -1,5 +1,6 @@
 import json
 import plotly
+import numpy as np
 import pandas as pd
 
 import nltk
@@ -14,7 +15,6 @@ from flask import render_template, request, jsonify
 from plotly.graph_objs import Bar
 import joblib
 from sqlalchemy import create_engine
-
 
 
 app = Flask(__name__)
@@ -42,60 +42,75 @@ model = joblib.load("models/classifier.pkl")
 @app.route('/')
 @app.route('/index')
 def index():
-    
+
     # extract data needed for visuals
-    # TODO: Below is an example - modify to extract data for your own visuals
-    genre_counts = df.groupby('genre').count()['message']
-    genre_names = list(genre_counts.index)
-    
+
+    # Distribution of different categories
+    cat_count = []
+    categories = df.iloc[:,4:].columns
+    for cat in categories:
+        cat_count.append(df[cat].sum())
+    cat_count = np.array(cat_count)
+    order = np.argsort(cat_count)[::-1]
+
+    cat_count_x = categories[order]
+    cat_count_y = cat_count[order]
+
+    # Histogram distribution of number of words in messsages
+    words_in_message = df.message.str.split().str.len()
+    words_x, words_y = np.histogram(
+            words_in_message,
+            range=(0, words_in_message.quantile(0.99))
+        )
+
+
     # create visuals
-    # TODO: Below is an example - modify to create your own visuals
     graphs = [
+
         {
             'data': [
                 Bar(
-                    x=genre_names,
-                    y=genre_counts
+                    marker= {'color': '#0000b2'},
+                    x=cat_count_x,
+                    y=cat_count_y
                 )
             ],
 
             'layout': {
-                'title': 'Distribution of Message Genres',
+                'title': 'Distribution of different Categories',
                 'yaxis': {
-                    'title': "Count"
+                    'title': "Message Count"
                 },
                 'xaxis': {
-                    'title': "Genre"
+                    'title': "Categories"
                 }
             }
         },
         {
             'data': [
                 Bar(
-                    x=genre_names,
-                    y=genre_counts
-                )
-            ],
-
+                    marker= {'color': '#0000b2'},
+                    x=words_x,
+                    y=words_y
+                    )
+                 ],
             'layout': {
-                'title': 'Distribution of Message Genres 2 Graph',
+                'title': 'Distribution of words per message',
+                
                 'yaxis': {
-                    'title': "Count2"
+                    'title': "Word Count"
                 },
                 'xaxis': {
-                    'title': "Genre2"
+                    'title': "Words per Message"
                 }
             }
         }
-
-
-
     ]
-    
+
     # encode plotly graphs in JSON
     ids = ["graph-{}".format(i) for i, _ in enumerate(graphs)]
     graphJSON = json.dumps(graphs, cls=plotly.utils.PlotlyJSONEncoder)
-    
+
     # render web page with plotly graphs
     return render_template('master.html', ids=ids, graphJSON=graphJSON)
 

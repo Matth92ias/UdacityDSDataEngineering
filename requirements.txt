@@ -3,3 +3,5 @@ numpy
 nltk
 sqlalchemy
 sklearn
+plotly
+xgboost

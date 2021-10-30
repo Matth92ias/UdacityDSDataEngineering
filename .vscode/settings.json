@@ -1,0 +1,5 @@
+{
+    "git.ignoreLimitWarning": true,
+    "python.defaultInterpreterPath": "/Users/matthiaslenfers/opt/miniconda3/bin/python/envs/disaster_pipeline/bin/python",
+    "terminal.integrated.inheritEnv": false
+}
