@@ -140,12 +140,6 @@ def main():
         X, Y, category_names = load_data(database_filepath)
         X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=0.2)
         
-        # one column with a none binary value - cleaned here
-        for col in y_train.columns:
-            y_train[col] = y_train[col].map(lambda x: 1 if x > 0 else 0)
-        for col in y_test.columns:
-            y_test[col] = y_test[col].map(lambda x: 1 if x > 0 else 0)
-
         print('Building model...')
         model = build_model(y_train)
         
