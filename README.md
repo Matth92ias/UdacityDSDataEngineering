@@ -10,9 +10,6 @@ The first two steps are to clean the data and fit a model on the cleaned dataset
 
 ## configuration 
 - file requirements.txt contains the necessary packages needed
-- project can be started as follows
-
-conda 
 
 
 ## ETL 
@@ -32,6 +29,8 @@ conda
 - templates/master.html contains the master template with the HTML code vor the dashboard
 - templates/go.html is the code which is displayed after a tweet is analyzed
 
+## pictures
+- contains screenshots of the app
 
 ### Instructions:
 1. Run the following commands in the project's root directory to set up your database and model.
